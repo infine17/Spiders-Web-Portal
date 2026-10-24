@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Spider's Web — Executive Operations Portal | !H-MOD INFINE</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #070a12;
+      --bg-secondary: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.82);
+      --bg-card-hover: rgba(30, 41, 59, 0.95);
+      --border-subtle: rgba(148, 163, 184, 0.12);
+      --border-focus: rgba(16, 185, 129, 0.45);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.28);
+      --cyan: #06b6d4;
+      --cyan-glow: rgba(6, 182, 212, 0.28);
+      --indigo: #6366f1;
+      --indigo-glow: rgba(99, 102, 241, 0.28);
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --discord-dark: #1e1f22;
+      --discord-darker: #2b2d31;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      width: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(16, 185, 129, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 90% 25%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+      padding-bottom: 90px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes dockPop {
+      from { transform: translate(-50%, 60px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    /* Glass Effect Container */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-panel:hover {
+      border-color: rgba(148, 163, 184, 0.28);
+    }
+
+    /* Header Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 10, 18, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.85rem 1.75rem;
+    }
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .spider-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--emerald), var(--cyan));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: #042f2e;
+      box-shadow: 0 0 20px var(--emerald-glow);
+      transition: transform 0.25s;
+    }
+    .logo-badge:active .spider-icon {
+      transform: scale(0.92) rotate(-8deg);
+    }
+    .logo-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .logo-text span {
+      font-size: 0.7rem;
+      color: var(--emerald);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--emerald);
+    }
+    .action-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-full);
+      font-size: 0.84rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px var(--emerald-glow);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+    }
+    .action-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Mobile Floating Dock */
+    .mobile-dock {
+      display: none;
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-full);
+      padding: 0.45rem 0.75rem;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.15);
+      animation: dockPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .dock-list {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+      list-style: none;
+    }
+    .dock-item a {
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .dock-item a i {
+      font-size: 1rem;
+    }
+    .dock-item a:active {
+      transform: scale(0.9);
+    }
+    .dock-item.active a, .dock-item a:hover {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.35));
+      box-shadow: 0 0 12px var(--emerald-glow);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      max-width: 1400px;
+      margin: 3.5rem auto 3.5rem;
+      padding: 0 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1.15rem;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--emerald);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 1.3rem;
+      letter-spacing: 0.05em;
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      max-width: 860px;
+      margin: 0 auto 2.5rem;
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    /* High-Level Overview Matrix */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      max-width: 1400px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+    .stat-box {
+      padding: 1.6rem;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+    }
+    .stat-box::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--stat-color, var(--emerald));
+    }
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .stat-icon {
+      font-size: 1.3rem;
+      color: var(--stat-color, var(--emerald));
+    }
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    /* Task Navigation Filter Tabs */
+    .filter-tabs-wrapper {
+      max-width: 1400px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.85rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .filter-tab:hover {
+      color: var(--text-main);
+      border-color: rgba(148, 163, 184, 0.3);
+      transform: translateY(-2px);
+    }
+    .filter-tab:active {
+      transform: scale(0.96);
+    }
+    .filter-tab.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+      border-color: var(--emerald);
+      box-shadow: 0 0 20px var(--emerald-glow);
+    }
+
+    /* Deliverable Roadmaps Timeline Container */
+    .timeline-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    /* Deliverable Card */
+    .deliverable-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 2.2rem;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2.5rem;
+      align-items: center;
+      animation: slideUpFade 0.4s ease forwards;
+    }
+    @media (max-width: 1024px) {
+      .deliverable-card {
+        grid-template-columns: 1fr;
+        padding: 1.75rem;
+        gap: 1.8rem;
+      }
+    }
+
+    .deliverable-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .day-badge {
+      padding: 0.35rem 0.95rem;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .day-1-badge { background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.35); }
+    .day-2-badge { background: rgba(6, 182, 212, 0.15); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.35); }
+    .day-future-badge { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.35); }
+
+    .status-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .status-live { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-active { background: rgba(6, 182, 212, 0.15); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .status-queued { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.85rem;
+      line-height: 1.25;
+      color: #ffffff;
+    }
+    .card-description {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .highlights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .highlight-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.92rem;
+      color: #cbd5e1;
+    }
+    .highlight-item i {
+      color: var(--emerald);
+      font-size: 0.85rem;
+    }
+
+    /* Action Links Bar */
+    .links-group {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .launch-btn {
+      padding: 0.65rem 1.35rem;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+    }
+    .btn-emerald {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    }
+    .btn-emerald:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(16, 185, 129, 0.5);
+    }
+    .btn-cyan {
+      background: linear-gradient(135deg, #06b6d4, #0284c7);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35);
+    }
+    .btn-cyan:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(6, 182, 212, 0.5);
+    }
+    .btn-outline {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: #e2e8f0;
+    }
+    .btn-outline:hover {
+      background: rgba(51, 65, 85, 0.8);
+      border-color: rgba(148, 163, 184, 0.45);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .launch-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Deliverable Visual Banner / Metric Box (Right Column) */
+    .preview-visual-box {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+    .visual-top-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.75rem;
+    }
+    .repo-tag {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--cyan);
+    }
+    .mini-metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    .mini-stat {
+      background: rgba(30, 41, 59, 0.5);
+      padding: 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .mini-stat-val {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+    .mini-stat-lbl {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* SOP Quick Copy Banner */
+    .quick-share-box {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .share-inner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(6, 182, 212, 0.08));
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .share-text h4 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+    .share-text p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+    .copy-portal-btn {
+      background: var(--emerald);
+      color: #042f2e;
+      border: none;
+      padding: 0.75rem 1.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: 0 4px 15px var(--emerald-glow);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .copy-portal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+    .copy-portal-btn:active {
+      transform: scale(0.96);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      background: #050810;
+      padding: 3.5rem 1.5rem 2.5rem;
+      text-align: center;
+      margin-top: 5rem;
+    }
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.75rem;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--emerald);
+    }
+    .footer-copy {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    /* Responsive Mobile Overrides */
+    @media (max-width: 850px) {
+      .nav-links { display: none; }
+      .mobile-dock { display: block; }
+      .hero-section { margin: 2rem auto 2.5rem; padding: 0 1rem; }
+      .timeline-container { padding: 0 1rem 3rem; gap: 2rem; }
+      .overview-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; padding: 0 1rem; }
+      .stat-box { padding: 1.15rem 0.95rem; }
+      .stat-number { font-size: 1.75rem; }
+      .card-title { font-size: 1.55rem; }
+      .card-description { font-size: 0.92rem; }
+      .share-inner { padding: 1.4rem; flex-direction: column; align-items: flex-start; }
+      .copy-portal-btn { width: 100%; justify-content: center; }
+      .filter-tabs-wrapper {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 0 0.5rem 0.5rem;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .filter-tabs-wrapper::-webkit-scrollbar { display: none; }
+      .filter-tab { flex-shrink: 0; padding: 0.65rem 1.15rem; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-badge">
+        <div class="spider-icon"><i class="fa-solid fa-spider"></i></div>
+        <div class="logo-text">
+          <h1>SPIDER'S WEB</h1>
+          <span>Operations Command Portal</span>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#deliverables" class="nav-link active"><i class="fa-solid fa-layer-group"></i> All Tasks</a>
+        <a href="#day1" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Day 1 (Audit)</a>
+        <a href="#day2" class="nav-link"><i class="fa-solid fa-bolt"></i> Day 2 (Strategy)</a>
+        <a href="#roadmap" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Roadmap</a>
+      </nav>
+      <a href="https://github.com/infine17" target="_blank" class="action-btn">
+        <i class="fa-brands fa-github"></i> infine17 Profile
+      </a>
+    </div>
+  </header>
+
+  <!-- Mobile Floating Dock -->
+  <nav class="mobile-dock">
+    <ul class="dock-list">
+      <li class="dock-item active"><a href="#deliverables"><i class="fa-solid fa-layer-group"></i><span>Tasks</span></a></li>
+      <li class="dock-item"><a href="#day1"><i class="fa-solid fa-chart-pie"></i><span>Day 1</span></a></li>
+      <li class="dock-item"><a href="#day2"><i class="fa-solid fa-bolt"></i><span>Day 2</span></a></li>
+      <li class="dock-item"><a href="https://github.com/infine17" target="_blank"><i class="fa-brands fa-github"></i><span>Git</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Header -->
+  <section class="hero-section">
+    <div class="hero-pill">
+      <i class="fa-solid fa-shield-halved"></i> SPIDER'S WEB EXECUTIVE COMMAND CENTER
+    </div>
+    <h2 class="hero-title">Leadership Operations & <span>Deliverables Hub</span></h2>
+    <p class="hero-subtitle">
+      Centralized index of all executive tasks, empirical audits, and strategic operational engines prepared by <strong>!H-MOD | INFINE</strong> for <strong>DeadSoul</strong> and the Spider's Web leadership team.
+    </p>
+  </section>
+
+  <!-- High-Level Overview Stats Matrix -->
+  <div class="overview-grid">
+    <div class="glass-panel stat-box" style="--stat-color: var(--emerald);">
+      <div class="stat-header">
+        <span class="stat-label">Delivered Tasks</span>
+        <i class="fa-solid fa-circle-check stat-icon"></i>
+      </div>
+      <div class="stat-number">2 / 2</div>
+      <div class="stat-desc">Day 1 & Day 2 fully built & deployed</div>
+    </div>
+
+    <div class="glass-panel stat-box" style="--stat-color: var(--cyan);">
+      <div class="stat-header">
+        <span class="stat-label">Staff Evaluated</span>
+        <i class="fa-solid fa-users-viewfinder stat-icon"></i>
+      </div>
+      <div class="stat-number">17</div>
+      <div class="stat-desc">Complete telemetry cards verified</div>
+    </div>
+
+    <div class="glass-panel stat-box" style="--stat-color: var(--indigo);">
+      <div class="stat-header">
+        <span class="stat-label">Strategic Engines</span>
+        <i class="fa-solid fa-gears stat-icon"></i>
+      </div>
+      <div class="stat-number">3</div>
+      <div class="stat-desc">Zero-setup high-yield frameworks</div>
+    </div>
+
+    <div class="glass-panel stat-box" style="--stat-color: var(--amber);">
+      <div class="stat-header">
+        <span class="stat-label">Executive PDF Dossiers</span>
+        <i class="fa-solid fa-file-pdf stat-icon"></i>
+      </div>
+      <div class="stat-number">1</div>
+      <div class="stat-desc">Decorative print dossier generated</div>
+    </div>
+  </div>
+
+  <!-- Task Filters -->
+  <div class="filter-tabs-wrapper" id="deliverables">
+    <button class="filter-tab active" onclick="filterTasks('all', this)">
+      <i class="fa-solid fa-list-check"></i> All Deliverables
+    </button>
+    <button class="filter-tab" onclick="filterTasks('day1', this)">
+      <i class="fa-solid fa-calendar-day"></i> Day 1: Staff Audit
+    </button>
+    <button class="filter-tab" onclick="filterTasks('day2', this)">
+      <i class="fa-solid fa-calendar-plus"></i> Day 2: Strategic Changes
+    </button>
+    <button class="filter-tab" onclick="filterTasks('roadmap', this)">
+      <i class="fa-solid fa-rocket"></i> Day 3+ Roadmap
+    </button>
+  </div>
+
+  <!-- Timeline Cards Section -->
+  <main class="timeline-container">
+
+    <!-- ========================================================================= -->
+    <!-- DAY 1: COMPREHENSIVE STAFF PERFORMANCE AUDIT -->
+    <!-- ========================================================================= -->
+    <div class="glass-panel deliverable-card" id="card-day1">
+      <div>
+        <div class="deliverable-header">
+          <span class="day-badge day-1-badge"><i class="fa-solid fa-calendar-check"></i> Day 1 Task</span>
+          <span class="status-pill status-live"><i class="fa-solid fa-circle"></i> Live on GitHub Pages</span>
+        </div>
+        <h3 class="card-title">Comprehensive Staff Performance Audit & Dossier</h3>
+        <p class="card-description">
+          A full-scale performance audit of all 17 moderators across Head Mods, Full Mods, and Trial Mods. Features empirical Statbot message and active-day metrics, a swipeable roster carousel, 5 comparative analytical charts, official server policy compliance checks (no Trial Mods solving tickets), and an executive 4.5 MB printable PDF dossier.
+        </p>
+
+        <div class="highlights-list">
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> All 17 official Discord telemetry cards embedded & verified</div>
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> 5 empirical charts: Message Velocity, Roster Share, and Activity Indices</div>
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> Policy compliance banner: strict Trial Mod ticket boundary enforced</div>
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> Decorative executive PDF dossier included for leadership download</div>
+        </div>
+
+        <div class="links-group">
+          <a href="https://infine17.github.io/Comprehensive-Staff-Report/" target="_blank" class="launch-btn btn-emerald">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Day 1 Website
+          </a>
+          <a href="https://github.com/infine17/Comprehensive-Staff-Report" target="_blank" class="launch-btn btn-outline">
+            <i class="fa-brands fa-github"></i> Repository
+          </a>
+          <a href="https://github.com/infine17/Comprehensive-Staff-Report/blob/main/Spiders_Web_Staff_Performance_Audit.pdf" target="_blank" class="launch-btn btn-outline">
+            <i class="fa-solid fa-file-pdf"></i> Download PDF
+          </a>
+        </div>
+      </div>
+
+      <!-- Preview Meta Box -->
+      <div class="preview-visual-box">
+        <div class="visual-top-meta">
+          <span class="repo-tag"><i class="fa-solid fa-folder-open"></i> Comprehensive-Staff-Report</span>
+          <span style="font-size: 0.72rem; color: #10b981; font-weight: 700;">● STABLE</span>
+        </div>
+        <div class="mini-metric-grid">
+          <div class="mini-stat">
+            <div class="mini-stat-val">17</div>
+            <div class="mini-stat-lbl">Staff Tracked</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">5</div>
+            <div class="mini-stat-lbl">Empirical Charts</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">100%</div>
+            <div class="mini-stat-lbl">Policy Sync</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">4.5 MB</div>
+            <div class="mini-stat-lbl">Executive PDF</div>
+          </div>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); text-align: center;">
+          Commit: <code>4815a5d</code> · Deployed on GitHub Pages
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- DAY 2: STRATEGIC OPERATIONS & ENGAGEMENT ENGINE -->
+    <!-- ========================================================================= -->
+    <div class="glass-panel deliverable-card" id="card-day2">
+      <div>
+        <div class="deliverable-header">
+          <span class="day-badge day-2-badge"><i class="fa-solid fa-calendar-check"></i> Day 2 Task</span>
+          <span class="status-pill status-active"><i class="fa-solid fa-circle"></i> Live on GitHub Pages</span>
+        </div>
+        <h3 class="card-title">Strategic Operations & Community Retention Engine</h3>
+        <p class="card-description">
+          Three zero-setup, high-yield frameworks engineered in response to DeadSoul's brief for low-drama, plug-and-play additions. Includes: (1) Buddy Pairing & Two-Way Role Model Loop, (2) Rapid-Fire 4-Button MCQ Trivia Drops with Tiered XP & anti-spam lockout, and (3) Zero-Downtime Seasonal Theme Updates matching Spider's Web exact Discord channel structure.
+        </p>
+
+        <div class="highlights-list">
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> <strong>Role Model Loop:</strong> Full Mods stay active to lead by example for T-Mods</div>
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> <strong>Empowered Action:</strong> Trial Mods directly execute timeouts with mentor coaching</div>
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> <strong>Interactive MCQ Engine:</strong> Country Flags, Speed Math, and General Knowledge</div>
+          <div class="highlight-item"><i class="fa-solid fa-check"></i> <strong>Live Spider's Web Reskin:</strong> Dynamic prefix swaps (<code>🍁 ›</code> ➔ <code>🎃 ›</code> ➔ <code>🪔 ›</code>)</div>
+        </div>
+
+        <div class="links-group">
+          <a href="https://infine17.github.io/Efficient-Changes/" target="_blank" class="launch-btn btn-cyan">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Day 2 Website
+          </a>
+          <a href="https://github.com/infine17/Efficient-Changes" target="_blank" class="launch-btn btn-outline">
+            <i class="fa-brands fa-github"></i> Repository
+          </a>
+        </div>
+      </div>
+
+      <!-- Preview Meta Box -->
+      <div class="preview-visual-box">
+        <div class="visual-top-meta">
+          <span class="repo-tag"><i class="fa-solid fa-folder-open"></i> Efficient-Changes</span>
+          <span style="font-size: 0.72rem; color: #06b6d4; font-weight: 700;">● OPERATIONAL</span>
+        </div>
+        <div class="mini-metric-grid">
+          <div class="mini-stat">
+            <div class="mini-stat-val">-78%</div>
+            <div class="mini-stat-lbl">Head Pings</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">+165%</div>
+            <div class="mini-stat-lbl">Staff Activity</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">+240%</div>
+            <div class="mini-stat-lbl">Chat Retention</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">0.00s</div>
+            <div class="mini-stat-lbl">Downtime</div>
+          </div>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); text-align: center;">
+          Commit: <code>db1fc1e</code> · Fully Mobile Responsive
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- DAY 3+: ROADMAP & FUTURE MILESTONES -->
+    <!-- ========================================================================= -->
+    <div class="glass-panel deliverable-card" id="card-roadmap">
+      <div>
+        <div class="deliverable-header">
+          <span class="day-badge day-future-badge"><i class="fa-solid fa-clock-rotate-left"></i> Upcoming Milestone</span>
+          <span class="status-pill status-queued"><i class="fa-solid fa-hourglass-half"></i> Day 3 & Next Directives</span>
+        </div>
+        <h3 class="card-title">Future Operations & Leadership Milestones</h3>
+        <p class="card-description">
+          Dedicated slot for upcoming leadership directives, advanced staff rotation telemetry, event management playbooks, and server growth milestones assigned by DeadSoul.
+        </p>
+
+        <div class="highlights-list">
+          <div class="highlight-item"><i class="fa-solid fa-arrow-right"></i> Day 3 Directives from DeadSoul & Heads GC</div>
+          <div class="highlight-item"><i class="fa-solid fa-arrow-right"></i> Cross-department synergy audits (Tickets, Media, Events)</div>
+          <div class="highlight-item"><i class="fa-solid fa-arrow-right"></i> Automated staff evaluation command integrations</div>
+        </div>
+
+        <div class="links-group">
+          <button class="launch-btn btn-outline" onclick="confetti({ particleCount: 30, spread: 50 }); alert('Day 3 task slot is standing by for DeadSoul\'s next assignment!');">
+            <i class="fa-solid fa-bell"></i> Notify for Day 3
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-visual-box" style="text-align: center; justify-content: center;">
+        <i class="fa-solid fa-network-wired" style="font-size: 3rem; color: var(--amber); margin-bottom: 0.5rem;"></i>
+        <div style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; color: #fff;">
+          Standing By For Instructions
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim);">
+          Portal is modular and expands automatically as new days are completed.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Quick Share / GC Notification Banner -->
+  <div class="quick-share-box">
+    <div class="share-inner">
+      <div class="share-text">
+        <h4>Need to share this portal with DeadSoul or the Heads GC?</h4>
+        <p>One single link gives leadership immediate access to all Day 1, Day 2, and future deliverables.</p>
+      </div>
+      <button class="copy-portal-btn" onclick="copyPortalLink()">
+        <i class="fa-regular fa-copy"></i> Copy Portal Link
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="logo-badge">
+        <div class="spider-icon" style="width: 34px; height: 34px; font-size: 1rem;"><i class="fa-solid fa-spider"></i></div>
+        <div class="logo-text" style="text-align: left;">
+          <h1 style="font-size: 1rem;">SPIDER'S WEB</h1>
+          <span style="font-size: 0.65rem;">Prepared for DeadSoul & Leadership</span>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#deliverables">All Deliverables</a>
+        <a href="#day1">Day 1: Staff Audit</a>
+        <a href="#day2">Day 2: Strategic Changes</a>
+        <a href="https://github.com/infine17">GitHub Profile</a>
+      </div>
+      <div class="footer-copy">
+        Crafted with precision by !H-MOD | INFINE · Spider's Web Operations Portal · October 2026
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Task Filter Tabs
+    function filterTasks(category, btn) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const card1 = document.getElementById('card-day1');
+      const card2 = document.getElementById('card-day2');
+      const cardRoadmap = document.getElementById('card-roadmap');
+
+      if (category === 'all') {
+        card1.style.display = 'grid';
+        card2.style.display = 'grid';
+        cardRoadmap.style.display = 'grid';
+      } else if (category === 'day1') {
+        card1.style.display = 'grid';
+        card2.style.display = 'none';
+        cardRoadmap.style.display = 'none';
+        card1.scrollIntoView({ behavior: 'smooth' });
+      } else if (category === 'day2') {
+        card1.style.display = 'none';
+        card2.style.display = 'grid';
+        cardRoadmap.style.display = 'none';
+        card2.scrollIntoView({ behavior: 'smooth' });
+      } else if (category === 'roadmap') {
+        card1.style.display = 'none';
+        card2.style.display = 'none';
+        cardRoadmap.style.display = 'grid';
+        cardRoadmap.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Copy Portal Link
+    function copyPortalLink() {
+      navigator.clipboard.writeText('https://infine17.github.io/Spiders-Web-Portal/');
+      alert('Portal link copied to clipboard!\nShare: https://infine17.github.io/Spiders-Web-Portal/');
+      confetti({ particleCount: 35, spread: 60, origin: { y: 0.8 } });
+    }
+  </script>
+</body>
+</html>
