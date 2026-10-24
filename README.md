@@ -1,6 +1,6 @@
 # 🕸️ Spider's Web — Executive Operations & Deliverables Portal
 
-> **Centralized Command Center & Master Landing Page for Server Leadership (`DeadSoul`)**  
+> **Centralized Command Center & Master Landing Page for Spider's Web Executive Leadership**  
 > Prepared by **`!H-MOD | INFINE`** · Single Hub Linking All Day-by-Day Deliverables & Roadmaps.
 
 ---
@@ -24,7 +24,7 @@
 ---
 
 ### ⚡ Day 2: Strategic Operations & Community Retention Engine
-* **Objective:** Three zero-setup, high-impact frameworks delivered in response to DeadSoul's directive.
+* **Objective:** Three zero-setup, high-impact frameworks delivered for executive leadership.
 * **Deliverables:**
   * 🌐 **Live Interactive Engine:** [`https://infine17.github.io/Efficient-Changes/`](https://infine17.github.io/Efficient-Changes/)
   * 🐙 **GitHub Repository:** [`infine17/Efficient-Changes`](https://github.com/infine17/Efficient-Changes)
@@ -36,7 +36,7 @@
 ---
 
 ### 🚀 Day 3 & Upcoming Operations: Standing By
-* Dedicated modular slot for future leadership assignments, event management playbooks, and server growth milestones from DeadSoul and the Heads GC.
+* Dedicated modular slot for future leadership assignments, event management playbooks, and server growth milestones.
 
 ---
 
@@ -63,4 +63,4 @@ To enable the live website:
 
 ---
 
-*Authored by !H-MOD | INFINE for DeadSoul & Spider's Web Executive Leadership.*
+*Authored by !H-MOD | INFINE for Spider's Web Executive Leadership.*
